@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "pl_file_sqldata",
+				"name": "pl_sqldata",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"userProperties": [],
@@ -20,7 +20,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "pl_file_sqldata",
+						"activity": "pl_sqldata",
 						"dependencyConditions": [
 							"Succeeded"
 						]
