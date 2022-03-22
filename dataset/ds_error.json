@@ -1,0 +1,23 @@
+{
+	"name": "ds_error",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_AzBlobStg",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "ErrorRec",
+				"container": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\"",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
