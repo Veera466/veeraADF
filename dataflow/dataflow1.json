@@ -1,0 +1,92 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_file",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_emp3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "ls_AzureBlobStorage",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as short,",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as short,",
+				"          HIREDATE as string,",
+				"          SAL as integer,",
+				"          COMM as short,",
+				"          DEPTNO as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          EMPNO,",
+				"          ENAME,",
+				"          JOB,",
+				"          MGR,",
+				"          HIREDATE,",
+				"          SAL,",
+				"          COMM,",
+				"          DEPTNO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          empno as integer,",
+				"          ename as string,",
+				"          job as string,",
+				"          sal as integer,",
+				"          dept as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_container: 'raw',",
+				"     rejectedData_folderPath: 'errorrecords',",
+				"     transactionCommit: 'single',",
+				"     reportSuccessOnError: true,",
+				"     mapColumn(",
+				"          empno = EMPNO,",
+				"          ename = ENAME,",
+				"          job = JOB,",
+				"          sal = SAL,",
+				"          dept = DEPTNO",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

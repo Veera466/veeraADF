@@ -1,0 +1,136 @@
+{
+	"name": "pl_success_record",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": true,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "ls_AzureBlobStorage",
+								"type": "LinkedServiceReference"
+							},
+							"path": "raw/emp5"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "empno",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "empno",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "ename",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ename",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "job",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "job",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "sal",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "sal",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "dept",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "dept",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sql_emp3",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_SqlTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "emp_new"
+						}
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-03-21T13:50:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "ADFVeera",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e119c9c8-3b19-41fb-bd01-ea008713a5d1",
+		"tenantId": "f110774f-9ca8-42a3-87ad-e3037270e825"
+	}
+}

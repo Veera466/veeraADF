@@ -1,0 +1,99 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp_file",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_emp4",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "ls_AzureBlobStorage",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     filename as string",
+				"}",
+				"source(output(",
+				"          EMPNO as string,",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as string,",
+				"          HIREDATE as string,",
+				"          SAL as string,",
+				"          COMM as string,",
+				"          DEPTNO as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          EMPNO,",
+				"          ENAME,",
+				"          JOB,",
+				"          MGR,",
+				"          HIREDATE,",
+				"          SAL,",
+				"          COMM,",
+				"          DEPTNO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(SAL_new = toInteger(SAL)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          empno as integer,",
+				"          ename as string,",
+				"          job as string,",
+				"          sal as integer,",
+				"          dept as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_container: 'raw',",
+				"     rejectedData_folderPath: ($filename),",
+				"     transactionCommit: 'single',",
+				"     reportSuccessOnError: true,",
+				"     mapColumn(",
+				"          empno = EMPNO,",
+				"          ename = ENAME,",
+				"          job = JOB,",
+				"          sal = SAL_new,",
+				"          dept = DEPTNO",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
