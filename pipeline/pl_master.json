@@ -3,24 +3,24 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1",
+				"name": "pl_file_sqldata",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pl_file_sqldata",
+						"referenceName": "pl_copy_sqldata",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
 				}
 			},
 			{
-				"name": "error",
+				"name": "pl_error",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1",
+						"activity": "pl_file_sqldata",
 						"dependencyConditions": [
 							"Succeeded"
 						]
