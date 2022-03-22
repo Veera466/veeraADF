@@ -1,5 +1,5 @@
 {
-	"name": "pl_file_sqldata",
+	"name": "pl_error_record",
 	"properties": {
 		"activities": [
 			{
@@ -16,9 +16,17 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "emp5",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "AzureSqlSink",
@@ -26,82 +34,67 @@
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
-					"enableSkipIncompatibleRow": true,
-					"logSettings": {
-						"enableCopyActivityLog": true,
-						"copyActivityLogSettings": {
-							"logLevel": "Info",
-							"enableReliableLogging": false
-						},
-						"logLocationSettings": {
-							"linkedServiceName": {
-								"referenceName": "ls_AzBlobStg",
-								"type": "LinkedServiceReference"
-							},
-							"path": "raw/ErrorRec"
-						}
-					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
 								"source": {
-									"name": "empno",
+									"name": "Timestamp",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "empno",
-									"type": "Int32",
-									"physicalType": "int"
-								}
-							},
-							{
-								"source": {
-									"name": "ename",
-									"type": "String",
-									"physicalType": "varchar"
-								},
-								"sink": {
-									"name": "ename",
+									"name": "timestamp",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "job",
+									"name": "Level",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "job",
+									"name": "level",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "sal",
+									"name": "OperationName",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "sal",
-									"type": "Int32",
-									"physicalType": "int"
+									"name": "OerationName",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "dept",
-									"type": "Int32",
-									"physicalType": "int"
+									"name": "OperationItem",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "dept",
-									"type": "Int32",
-									"physicalType": "int"
+									"name": "OperationItem",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Message",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Message",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							}
 						],
@@ -114,11 +107,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_SqlTable",
-						"type": "DatasetReference",
-						"parameters": {
-							"TableName": "emp3"
-						}
+						"referenceName": "ds_blog_raw",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -126,14 +116,14 @@
 						"referenceName": "ds_SqlTable",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "emp_new"
+							"TableName": "error_record"
 						}
 					}
 				]
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2022-03-22T19:33:11Z"
+		"lastPublishTime": "2022-03-21T13:50:52Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

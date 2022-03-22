@@ -1,5 +1,5 @@
 {
-	"name": "pl_file_sqldata",
+	"name": "pl_success_record",
 	"properties": {
 		"activities": [
 			{
@@ -30,15 +30,15 @@
 					"logSettings": {
 						"enableCopyActivityLog": true,
 						"copyActivityLogSettings": {
-							"logLevel": "Info",
+							"logLevel": "Warning",
 							"enableReliableLogging": false
 						},
 						"logLocationSettings": {
 							"linkedServiceName": {
-								"referenceName": "ls_AzBlobStg",
+								"referenceName": "ls_AzureBlobStorage",
 								"type": "LinkedServiceReference"
 							},
-							"path": "raw/ErrorRec"
+							"path": "raw/emp5"
 						}
 					},
 					"translator": {
@@ -114,11 +114,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_SqlTable",
-						"type": "DatasetReference",
-						"parameters": {
-							"TableName": "emp3"
-						}
+						"referenceName": "ds_sql_emp3",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -133,7 +130,7 @@
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2022-03-22T19:33:11Z"
+		"lastPublishTime": "2022-03-21T13:50:52Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
