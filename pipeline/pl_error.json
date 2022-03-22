@@ -21,7 +21,7 @@
 							{
 								"name": "load_id",
 								"value": {
-									"value": "@pipeline().RunId",
+									"value": "@pipeline().Pipeline",
 									"type": "Expression"
 								}
 							}
@@ -33,6 +33,7 @@
 								"value": "@pipeline().parameters.date",
 								"type": "Expression"
 							},
+							"wildcardFolderPath": "ErrorRec",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
