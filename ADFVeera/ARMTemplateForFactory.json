@@ -11,9 +11,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_AzBlobStg'"
 		},
+		"ls_AzureBlobStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_AzureBlobStorage'"
+		},
 		"ls_AzureSqlDatabase_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_AzureSqlDatabase'"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://keyVaultVeera.vault.azure.net/"
 		}
 	},
 	"variables": {
@@ -21,7 +29,108 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_error')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow2",
+								"type": "DataFlowReference",
+								"parameters": {
+									"filename": {
+										"value": "'@{pipeline().RunId}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-16T10:31:32Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_data_flow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-15T19:10:44Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_error_record')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -41,22 +150,10 @@
 						"typeProperties": {
 							"source": {
 								"type": "DelimitedTextSource",
-								"additionalColumns": [
-									{
-										"name": "load_id",
-										"value": {
-											"value": "@pipeline().RunId",
-											"type": "Expression"
-										}
-									}
-								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": true,
-									"modifiedDatetimeStart": {
-										"value": "@pipeline().parameters.date",
-										"type": "Expression"
-									},
+									"wildcardFolderPath": "emp5",
 									"wildcardFileName": "*",
 									"enablePartitionDiscovery": false
 								},
@@ -67,8 +164,7 @@
 							"sink": {
 								"type": "AzureSqlSink",
 								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"disableMetricsCollection": false
+								"sqlWriterUseTableLock": false
 							},
 							"enableStaging": false,
 							"translator": {
@@ -81,7 +177,7 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Timestamp",
+											"name": "timestamp",
 											"type": "String",
 											"physicalType": "varchar"
 										}
@@ -93,7 +189,7 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Level",
+											"name": "level",
 											"type": "String",
 											"physicalType": "varchar"
 										}
@@ -105,7 +201,7 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "OperationName",
+											"name": "OerationName",
 											"type": "String",
 											"physicalType": "varchar"
 										}
@@ -132,17 +228,6 @@
 											"name": "Message",
 											"type": "String",
 											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "load_id",
-											"type": "String"
-										},
-										"sink": {
-											"name": "load_id",
-											"type": "Int32",
-											"physicalType": "int"
 										}
 									}
 								],
@@ -155,7 +240,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ds_error",
+								"referenceName": "ds_blog_raw",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -165,7 +250,7 @@
 								"referenceName": "ds_SqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "error_rec"
+									"TableName": "error_record"
 								}
 							}
 						]
@@ -175,21 +260,16 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"parameters": {
-					"date": {
-						"type": "string"
-					}
-				},
 				"annotations": [],
-				"lastPublishTime": "2022-03-18T19:57:51Z"
+				"lastPublishTime": "2022-03-21T13:50:52Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_error')]",
+				"[concat(variables('factoryId'), '/datasets/ds_blog_raw')]",
 				"[concat(variables('factoryId'), '/datasets/ds_SqlTable')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_file_sqldata')]",
+			"name": "[concat(parameters('factoryName'), '/pl_success_record')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -222,15 +302,15 @@
 							"logSettings": {
 								"enableCopyActivityLog": true,
 								"copyActivityLogSettings": {
-									"logLevel": "Info",
+									"logLevel": "Warning",
 									"enableReliableLogging": false
 								},
 								"logLocationSettings": {
 									"linkedServiceName": {
-										"referenceName": "ls_AzBlobStg",
+										"referenceName": "ls_AzureBlobStorage",
 										"type": "LinkedServiceReference"
 									},
-									"path": "raw/ErrorRec"
+									"path": "raw/emp5"
 								}
 							},
 							"translator": {
@@ -306,11 +386,9 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ds_SqlTable",
+								"referenceName": "ds_sql_emp3",
 								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "emp3"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
@@ -329,70 +407,12 @@
 					"cancelAfter": {}
 				},
 				"annotations": [],
-				"lastPublishTime": "2022-03-18T15:08:32Z"
+				"lastPublishTime": "2022-03-21T13:50:52Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sql_emp3')]",
 				"[concat(variables('factoryId'), '/datasets/ds_SqlTable')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_AzBlobStg')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_master')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pl_file_sqldata",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "error",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pl_error",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"date": {
-									"value": "@pipeline().TriggerTime",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-03-18T19:57:51Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pl_file_sqldata')]",
-				"[concat(variables('factoryId'), '/pipelines/pl_error')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureBlobStorage')]"
 			]
 		},
 		{
@@ -470,6 +490,173 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_blog_raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "raw"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_emp4')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "empno",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ename",
+						"type": "varchar"
+					},
+					{
+						"name": "job",
+						"type": "varchar"
+					},
+					{
+						"name": "sal",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "dept",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "emp4"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_emp_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "emp.csv",
+						"container": "raw"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EMPNO",
+						"type": "String"
+					},
+					{
+						"name": "ENAME",
+						"type": "String"
+					},
+					{
+						"name": "JOB",
+						"type": "String"
+					},
+					{
+						"name": "MGR",
+						"type": "String"
+					},
+					{
+						"name": "HIREDATE",
+						"type": "String"
+					},
+					{
+						"name": "SAL",
+						"type": "String"
+					},
+					{
+						"name": "COMM",
+						"type": "String"
+					},
+					{
+						"name": "DEPTNO",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureBlobStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_error')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -498,6 +685,64 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_emp3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "empno",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ename",
+						"type": "varchar"
+					},
+					{
+						"name": "job",
+						"type": "varchar"
+					},
+					{
+						"name": "sal",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "dept",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "emp3"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ls_AzBlobStg')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -506,6 +751,19 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('ls_AzBlobStg_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_AzureBlobStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_AzureBlobStorage_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -522,6 +780,211 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_emp_file",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sql_emp3",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "ls_AzureBlobStorage",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPNO as short,",
+						"          ENAME as string,",
+						"          JOB as string,",
+						"          MGR as short,",
+						"          HIREDATE as string,",
+						"          SAL as integer,",
+						"          COMM as short,",
+						"          DEPTNO as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          EMPNO,",
+						"          ENAME,",
+						"          JOB,",
+						"          MGR,",
+						"          HIREDATE,",
+						"          SAL,",
+						"          COMM,",
+						"          DEPTNO",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          empno as integer,",
+						"          ename as string,",
+						"          job as string,",
+						"          sal as integer,",
+						"          dept as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'allErrors',",
+						"     outputRejectedData: true,",
+						"     rejectedData_container: 'raw',",
+						"     rejectedData_folderPath: 'errorrecords',",
+						"     transactionCommit: 'single',",
+						"     reportSuccessOnError: true,",
+						"     mapColumn(",
+						"          empno = EMPNO,",
+						"          ename = ENAME,",
+						"          job = JOB,",
+						"          sal = SAL,",
+						"          dept = DEPTNO",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_emp_file')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sql_emp3')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_emp_file",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_emp4",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"rejectedDataLinkedService": {
+								"referenceName": "ls_AzureBlobStorage",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     filename as string",
+						"}",
+						"source(output(",
+						"          EMPNO as string,",
+						"          ENAME as string,",
+						"          JOB as string,",
+						"          MGR as string,",
+						"          HIREDATE as string,",
+						"          SAL as string,",
+						"          COMM as string,",
+						"          DEPTNO as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          EMPNO,",
+						"          ENAME,",
+						"          JOB,",
+						"          MGR,",
+						"          HIREDATE,",
+						"          SAL,",
+						"          COMM,",
+						"          DEPTNO",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 derive(SAL_new = toInteger(SAL)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          empno as integer,",
+						"          ename as string,",
+						"          job as string,",
+						"          sal as integer,",
+						"          dept as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'allErrors',",
+						"     outputRejectedData: true,",
+						"     rejectedData_container: 'raw',",
+						"     rejectedData_folderPath: ($filename),",
+						"     transactionCommit: 'single',",
+						"     reportSuccessOnError: true,",
+						"     mapColumn(",
+						"          empno = EMPNO,",
+						"          ename = ENAME,",
+						"          job = JOB,",
+						"          sal = SAL_new,",
+						"          dept = DEPTNO",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_emp_file')]",
+				"[concat(variables('factoryId'), '/datasets/ds_emp4')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_AzureBlobStorage')]"
+			]
 		}
 	]
 }

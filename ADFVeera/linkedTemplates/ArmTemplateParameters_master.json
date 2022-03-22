@@ -8,8 +8,14 @@
 		"ls_AzBlobStg_connectionString": {
 			"value": ""
 		},
+		"ls_AzureBlobStorage_connectionString": {
+			"value": ""
+		},
 		"ls_AzureSqlDatabase_connectionString": {
 			"value": ""
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://keyVaultVeera.vault.azure.net/"
 		},
 		"containerUri": {
 			"value": ""
