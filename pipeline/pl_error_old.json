@@ -20,10 +20,6 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"modifiedDatetimeStart": {
-								"value": "@pipeline().parameters.Datetime",
-								"type": "Expression"
-							},
 							"wildcardFolderPath": "ErrorRecOld",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
