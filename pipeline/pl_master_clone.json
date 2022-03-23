@@ -12,13 +12,7 @@
 						"referenceName": "pl_copy_sqldata",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"FileName": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						}
-					}
+					"waitOnCompletion": true
 				}
 			},
 			{
@@ -38,13 +32,7 @@
 						"referenceName": "pl_error",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"foldername": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						}
-					}
+					"waitOnCompletion": true
 				}
 			},
 			{
@@ -68,14 +56,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_dny",
-						"type": "DatasetReference",
-						"parameters": {
-							"DataSetfoldername": {
-								"value": "@pipeline().Pipeline",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "ds_error",
+						"type": "DatasetReference"
 					},
 					"enableLogging": false,
 					"storeSettings": {

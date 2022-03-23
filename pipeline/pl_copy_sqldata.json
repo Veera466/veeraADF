@@ -37,7 +37,8 @@
 							"linkedServiceName": {
 								"referenceName": "ls_AzBlobStg",
 								"type": "LinkedServiceReference"
-							}
+							},
+							"path": "raw/ErrorRec"
 						}
 					},
 					"translator": {
@@ -131,11 +132,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"FileName": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"lastPublishTime": "2022-03-18T15:08:32Z"
 	}

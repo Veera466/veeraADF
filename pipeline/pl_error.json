@@ -17,22 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
-						"additionalColumns": [
-							{
-								"name": "load_id",
-								"value": {
-									"value": "@pipeline().Pipeline",
-									"type": "Expression"
-								}
-							}
-						],
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": {
-								"value": "@pipeline().parameters.foldername",
-								"type": "Expression"
-							},
+							"wildcardFolderPath": "ErrorRec",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -109,17 +97,6 @@
 									"type": "String",
 									"physicalType": "varchar"
 								}
-							},
-							{
-								"source": {
-									"name": "load_id",
-									"type": "String"
-								},
-								"sink": {
-									"name": "load_id",
-									"type": "Int32",
-									"physicalType": "int"
-								}
 							}
 						],
 						"typeConversion": true,
@@ -131,14 +108,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_dny",
-						"type": "DatasetReference",
-						"parameters": {
-							"DataSetfoldername": {
-								"value": "@pipeline().parameters.foldername",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "ds_error",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -152,11 +123,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"foldername": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"lastPublishTime": "2022-03-18T19:57:51Z"
 	}
