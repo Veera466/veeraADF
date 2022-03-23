@@ -38,7 +38,7 @@
 								"referenceName": "ls_AzBlobStg",
 								"type": "LinkedServiceReference"
 							},
-							"path": "raw/ErrorRec"
+							"path": "raw/ErrorRecOld"
 						}
 					},
 					"translator": {
