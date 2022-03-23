@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "dataflow2",
+				"name": "dataflow",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -34,7 +34,7 @@
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2022-03-16T10:31:32Z"
+		"lastPublishTime": "2022-03-22T20:15:17Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
