@@ -20,7 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "emp5",
+							"wildcardFolderPath": "POC_Error",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -107,7 +107,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_blog_raw",
+						"referenceName": "ds_POC_error",
 						"type": "DatasetReference"
 					}
 				],

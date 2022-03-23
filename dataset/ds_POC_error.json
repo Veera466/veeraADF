@@ -1,5 +1,5 @@
 {
-	"name": "ds_blog_raw",
+	"name": "ds_POC_error",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_AzureBlobStorage",
@@ -10,12 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "emp.csv",
 				"container": "raw"
 			},
 			"columnDelimiter": ",",
-			"escapeChar": "\"",
-			"firstRowAsHeader": true,
+			"escapeChar": "\\",
 			"quoteChar": "\""
 		},
 		"schema": [
@@ -42,17 +40,7 @@
 			},
 			{
 				"type": "String"
-			},
-			{
-				"type": "String"
-			},
-			{
-				"type": "String"
-			},
-			{
-				"type": "String"
 			}
 		]
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }
