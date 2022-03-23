@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pl_copy_sqldata",
+						"referenceName": "pl_copy_sqldata_old",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true

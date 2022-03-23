@@ -1,9 +1,9 @@
 {
-	"name": "pl_copy_sqldata_old",
+	"name": "pl_error_old",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy employe data",
+				"name": "Copy data error",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -16,92 +16,86 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "ErrorRec",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "AzureSqlSink",
 						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
-					"enableSkipIncompatibleRow": true,
-					"logSettings": {
-						"enableCopyActivityLog": true,
-						"copyActivityLogSettings": {
-							"logLevel": "Info",
-							"enableReliableLogging": false
-						},
-						"logLocationSettings": {
-							"linkedServiceName": {
-								"referenceName": "ls_AzBlobStg",
-								"type": "LinkedServiceReference"
-							},
-							"path": "raw/ErrorRec"
-						}
-					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
 								"source": {
-									"name": "empno",
+									"name": "Timestamp",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "empno",
-									"type": "Int32",
-									"physicalType": "int"
-								}
-							},
-							{
-								"source": {
-									"name": "ename",
-									"type": "String",
-									"physicalType": "varchar"
-								},
-								"sink": {
-									"name": "ename",
+									"name": "Timestamp",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "job",
+									"name": "Level",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "job",
+									"name": "Level",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "sal",
+									"name": "OperationName",
 									"type": "String",
-									"physicalType": "varchar"
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "sal",
-									"type": "Int32",
-									"physicalType": "int"
+									"name": "OperationName",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "dept",
-									"type": "Int32",
-									"physicalType": "int"
+									"name": "OperationItem",
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "dept",
-									"type": "Int32",
-									"physicalType": "int"
+									"name": "OperationItem",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Message",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Message",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							}
 						],
@@ -114,11 +108,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_SqlTable",
-						"type": "DatasetReference",
-						"parameters": {
-							"TableName": "emp3"
-						}
+						"referenceName": "ds_error",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -126,13 +117,13 @@
 						"referenceName": "ds_SqlTable",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "emp_new"
+							"TableName": "error_rec"
 						}
 					}
 				]
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2022-03-18T15:08:32Z"
+		"lastPublishTime": "2022-03-18T19:57:51Z"
 	}
 }
