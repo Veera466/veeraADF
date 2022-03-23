@@ -29,7 +29,10 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "errorrecords",
+							"wildcardFolderPath": {
+								"value": "@pipeline().parameters.foldername",
+								"type": "Expression"
+							},
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -128,8 +131,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_error",
-						"type": "DatasetReference"
+						"referenceName": "ds_dny",
+						"type": "DatasetReference",
+						"parameters": {
+							"DataSetfoldername": {
+								"value": "@pipeline().parameters.foldername",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -143,6 +152,11 @@
 				]
 			}
 		],
+		"parameters": {
+			"foldername": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2022-03-18T19:57:51Z"
 	}
