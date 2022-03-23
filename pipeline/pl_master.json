@@ -29,10 +29,16 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "pl_error",
+						"referenceName": "pl_error_old",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"Datetime": {
+							"value": "@pipeline().TriggerTime",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
