@@ -29,11 +29,7 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"modifiedDatetimeStart": {
-								"value": "@pipeline().parameters.date",
-								"type": "Expression"
-							},
-							"wildcardFolderPath": "ErrorRec",
+							"wildcardFolderPath": "errorrecords",
 							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
@@ -147,11 +143,6 @@
 				]
 			}
 		],
-		"parameters": {
-			"date": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"lastPublishTime": "2022-03-18T19:57:51Z"
 	}
