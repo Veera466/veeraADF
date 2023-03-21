@@ -1,0 +1,9 @@
+{
+	"name": "ADF-VDEV",
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "395e481c-3922-4551-8db1-5f5f0c75a48a",
+		"tenantId": "47819cba-4d86-4449-98b3-6e56afc41ad8"
+	}
+}
